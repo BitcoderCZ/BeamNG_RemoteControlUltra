@@ -36,6 +36,11 @@ namespace BeamNG.RemoteControlUltra.Managers
             }
         }
 
+        private void Update()
+        {
+            InputP.Update();
+        }
+
         public void Connect(string securityCode)
             => StartCoroutine(connect(securityCode));
         private IEnumerator connect(string securityCode)

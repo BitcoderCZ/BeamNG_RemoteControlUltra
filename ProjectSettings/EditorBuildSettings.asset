@@ -9,6 +9,12 @@ EditorBuildSettings:
     path: Assets/Scenes/Info.unity
     guid: fe8d2b74622e04f49a7a428099220c44
   - enabled: 1
+    path: Assets/Scenes/Settings.unity
+    guid: 4d5d42214a638a3478d6dea2248e7ee1
+  - enabled: 1
+    path: Assets/Scenes/CustomLayout.unity
+    guid: 30a7d55325702c6479eee45548255061
+  - enabled: 1
     path: Assets/Scenes/ScanQR.unity
     guid: 3fc8acdd13e6c734bafef6554d6fdbcd
   - enabled: 1

@@ -36,7 +36,7 @@ namespace BeamNG.RemoteControlUltra.Managers
 
         void Start()
         {
-#if UNITY_ANDROID
+#if PLATFORM_ANDROID && !UNITY_EDITOR
             plugin = new AndroidJavaClass("jp.kshoji.unity.sensor.UnitySensorPlugin").CallStatic<AndroidJavaObject>("getInstance");
             plugin.Call("setSamplingPeriod", 10 * 1000); // refresh sensor 10 mSec each
             plugin.Call("startSensorListening", "accelerometer");
@@ -49,7 +49,7 @@ namespace BeamNG.RemoteControlUltra.Managers
 
         private void Update()
         {
-#if UNITY_ANDROID
+#if PLATFORM_ANDROID && !UNITY_EDITOR
             if (plugin != null)
             {
                 float[]? sensorValue = plugin.Call<float[]>("getSensorValues", "rotationvector");
@@ -84,6 +84,7 @@ namespace BeamNG.RemoteControlUltra.Managers
                     gravity = rollingAverage.Average(); // -10 to 10
                 }
             }
+#endif
 
             if (AppManager.Ins.GameInstance is not null)
             {
@@ -112,7 +113,6 @@ namespace BeamNG.RemoteControlUltra.Managers
             float uiAngle = gravity * 7.9f * orientationhandler;
 
             uiContainer.transform.localEulerAngles = new Vector3(0f, 0f, uiAngle);
-#endif
         }
 
         public void Reconnect()

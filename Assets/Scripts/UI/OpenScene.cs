@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace BeamNG.RemoteControlUltra.Assets.Scripts.UI
+#nullable enable
+namespace BeamNG.RemoteControlUltra.UI
 {
     public class OpenScene : MonoBehaviour
     {

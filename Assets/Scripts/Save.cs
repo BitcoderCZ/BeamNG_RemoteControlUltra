@@ -18,6 +18,8 @@ namespace BeamNG.RemoteControlUltra
 
         public bool SeenLegalNotice { get; set; } = false;
 
+        public Settings Settings { get; set; } = new Settings();
+
         static Save()
         {
             Read();
