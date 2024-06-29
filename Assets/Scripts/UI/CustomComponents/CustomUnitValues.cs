@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 #nullable enable
 namespace BeamNG.RemoteControlUltra.UI.CustomComponents
@@ -109,16 +104,16 @@ namespace BeamNG.RemoteControlUltra.UI.CustomComponents
                     return value * ((RectTransform)transform).sizeDelta.x;
                 case Unit.ThisHeight:
                     return value * ((RectTransform)transform).sizeDelta.y;
-                case Unit.ThisMin: 
+                case Unit.ThisMin:
                     return value * MathF.Min(((RectTransform)transform).sizeDelta.x, ((RectTransform)transform).sizeDelta.y);
                 case Unit.ThisMax:
                     return value * MathF.Max(((RectTransform)transform).sizeDelta.x, ((RectTransform)transform).sizeDelta.y);
 
                 case Unit.ParentWidth:
                     return value * ((RectTransform)transform.parent).sizeDelta.x;
-                case Unit.ParentHeight: 
+                case Unit.ParentHeight:
                     return value * ((RectTransform)transform.parent).sizeDelta.y;
-                case Unit.ParentMin: 
+                case Unit.ParentMin:
                     return value * MathF.Min(((RectTransform)transform.parent).sizeDelta.x, ((RectTransform)transform.parent).sizeDelta.y);
                 case Unit.ParentMax:
                     return value * MathF.Max(((RectTransform)transform.parent).sizeDelta.x, ((RectTransform)transform.parent).sizeDelta.y);

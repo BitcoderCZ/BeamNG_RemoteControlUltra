@@ -1,10 +1,6 @@
-﻿using BeamNG.RemoteControlUltra.Models;
-using BeamNG.RemoteControlUltra.Layouts;
-using System;
+﻿using BeamNG.RemoteControlUltra.Layouts;
+using BeamNG.RemoteControlUltra.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 #nullable enable
 namespace BeamNG.RemoteControlUltra

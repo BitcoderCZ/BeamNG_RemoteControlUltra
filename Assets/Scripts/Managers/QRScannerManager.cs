@@ -1,11 +1,7 @@
 ﻿using BeamNG.RemoteControlUltra.UI.CustomComponents;
 using BeamNG.RemoteControlUltra.Utils;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.UI;
@@ -114,7 +110,7 @@ namespace BeamNG.RemoteControlUltra.Managers
             float camAspect = (float)camTexture.height / (float)camTexture.width;
             camDimensions.Ratio = camAspect;
             camDimensions.BasedOn = rotated ? ConstantDimensions.WidthOrHeight.Height : ConstantDimensions.WidthOrHeight.Width;
-            
+
             camImage.transform.localEulerAngles = new Vector3(0f, 0f, -camTexture.videoRotationAngle);
             camImage.transform.localScale = new Vector3(camTexture.videoVerticallyMirrored ? -1f : 1f, 1f, 1f);
 

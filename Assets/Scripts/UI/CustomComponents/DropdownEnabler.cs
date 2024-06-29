@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine.UI;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 #nullable enable
 namespace BeamNG.RemoteControlUltra.UI.CustomComponents
