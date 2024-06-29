@@ -1,4 +1,5 @@
-﻿using BeamNG.RemoteControlUltra.Utils;
+﻿using BeamNG.RemoteControlUltra.UI.CustomComponents;
+using BeamNG.RemoteControlUltra.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -19,7 +20,7 @@ namespace BeamNG.RemoteControlUltra.Managers
         protected override bool dontDestroyOnLoad => false;
 
         [SerializeField] private RawImage camImage = null!;
-        [SerializeField] private RectTransform camContainer = null!;
+        [SerializeField] private ConstantDimensions camDimensions = null!;
 
         private bool initialized = false;
 
@@ -46,7 +47,7 @@ namespace BeamNG.RemoteControlUltra.Managers
 #else
             init();
 #endif
-           
+
         }
         private void requestPermission()
         {
@@ -90,10 +91,10 @@ namespace BeamNG.RemoteControlUltra.Managers
 
             camTexture = new WebCamTexture(webCam.Value.name);
             camTexture.Play();
-            //if (webCam.Value.isAutoFocusPointSupported) camTexture.autoFocusPoint = new Vector2(0.5f, 0.5f);
 
             camImage.texture = camTexture;
             camRect = (RectTransform)camImage.transform;
+            camDimensions.StretchAndFit = true;
 
             initialized = true;
         }
@@ -101,25 +102,19 @@ namespace BeamNG.RemoteControlUltra.Managers
         private void Update()
         {
             if (
-                !initialized || 
+                !initialized ||
                 UIManager.Ins.Count != 0 ||
                 camTexture.width == 16 || camTexture.height == 16
             )
                 return;
 
-            // make sure it isn't bigger that the screen
-            float camAspect = Math.Max((float)camTexture.width / (float)camTexture.height, (float)Screen.width / (float)Screen.height);
-            if (camTexture.videoRotationAngle == 90 || camTexture.videoRotationAngle == 270)
-            {
-                camRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, camContainer.rect.width * camAspect);
-                camRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, camContainer.rect.width);
-            }
-            else
-            {
-                camRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, camContainer.rect.width);
-                camRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, camContainer.rect.width / camAspect);
-            }
+            bool rotated = camTexture.videoRotationAngle == 90 || camTexture.videoRotationAngle == 270;
 
+            // make sure it isn't bigger that the screen
+            float camAspect = (float)camTexture.height / (float)camTexture.width;
+            camDimensions.Ratio = camAspect;
+            camDimensions.BasedOn = rotated ? ConstantDimensions.WidthOrHeight.Height : ConstantDimensions.WidthOrHeight.Width;
+            
             camImage.transform.localEulerAngles = new Vector3(0f, 0f, -camTexture.videoRotationAngle);
             camImage.transform.localScale = new Vector3(camTexture.videoVerticallyMirrored ? -1f : 1f, 1f, 1f);
 

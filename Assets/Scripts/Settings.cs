@@ -15,7 +15,7 @@ namespace BeamNG.RemoteControlUltra
 
         public bool CustomLayout { get; set; } = false;
 
-        public ControlsLayout? CurrentLayout { get; set; }
+        public ControlsLayout CurrentLayout { get; set; } = ControlsLayout.Default;
 
         public List<ControlsLayout> Layouts { get; set; } = new List<ControlsLayout>();
     }

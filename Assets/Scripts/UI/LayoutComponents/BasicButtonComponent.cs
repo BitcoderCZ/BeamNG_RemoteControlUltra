@@ -9,8 +9,9 @@ using UnityEngine;
 #nullable enable
 namespace BeamNG.RemoteControlUltra.UI.LayoutComponents
 {
-    public class ButtonControl : LayoutComponent
+    public class BasicButtonComponent : ButtonComponent
     {
-        public override Vector2 MinSize => new Vector2(100, 100);
+        public override string TypeName => "Basic";
+        public override Vector2 MinSize => new Vector2(140, 120);
     }
 }

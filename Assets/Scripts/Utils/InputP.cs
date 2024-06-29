@@ -138,6 +138,22 @@ namespace BeamNG.RemoteControlUltra.Utils
                 .Value;
         }
 
+        public static int TouchDownCount()
+            => touches
+                .Where(item => item.Key != MouseId || TouchCount == touches.Count) // remove mouse if it isn't held down
+                .Where(item => item.Value.Touch.phase == TouchPhase.Began)
+                .Count();
+        public static int TouchingCount()
+            => touches
+                .Where(item => item.Key != MouseId || TouchCount == touches.Count) // remove mouse if it isn't held down
+                .Where(item => item.Value.Touch.phase != TouchPhase.Began && item.Value.Touch.phase != TouchPhase.Ended)
+                .Count();
+        public static int TouchUpCount()
+            => touches
+                .Where(item => item.Key != MouseId || TouchCount == touches.Count) // remove mouse if it isn't held down
+                .Where(item => item.Value.Touch.phase == TouchPhase.Ended)
+                .Count();
+
         private static MouseButtons getCurrentMouseButtons()
             => (MouseButtons)((Input.GetMouseButton(0) ? 1 : 0)
                 | (Input.GetMouseButton(1) ? 2 : 0)

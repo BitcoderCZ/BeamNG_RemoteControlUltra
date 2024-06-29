@@ -8,7 +8,10 @@ using System.Net;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
-using static BeamNG.RemoteControlLib.GameInstance;
+using Newtonsoft.Json;
+using NUnit.Framework;
+using BeamNG.RemoteControlUltra.Utils.Converters;
+using System.Collections.Generic;
 
 #nullable enable
 namespace BeamNG.RemoteControlUltra.Managers
@@ -26,6 +29,11 @@ namespace BeamNG.RemoteControlUltra.Managers
         {
             var cams = WebCamTexture.devices;
 
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings()
+            {
+                Converters = new List<JsonConverter>() { new Vector2Converter() },
+            };
+
             if (!Save.Ins.SeenLegalNotice)
             {
                 UIManager.Ins.OpenPopup("Legal Notice!", "This app is an independent creation and is not affiliated, associated, authorized, endorsed by, or in any way officially connected with BeamNG GmbH, the creators of BeamNG.drive. All product and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them.\n\nBeamNG.drive and the BeamNG.drive logo are trademarks of BeamNG GmbH.", UIManager.PopupButtons.Ok, callback: result =>
@@ -39,6 +47,19 @@ namespace BeamNG.RemoteControlUltra.Managers
         private void Update()
         {
             InputP.Update();
+
+            for (int _ = 0; _ < 200; _++)
+                try
+                {
+                    if (mainThreadQueue.Count == 0) break;
+
+                    if (mainThreadQueue.TryDequeue(out Action action))
+                        action();
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
+                }
         }
 
         public void Connect(string securityCode)
@@ -103,7 +124,7 @@ namespace BeamNG.RemoteControlUltra.Managers
             while (!task.IsCompleted && DateTime.UtcNow < timeOut)
                 yield return null;
 
-            ApiResponse<GameFindStatus, object?> resp;
+            ApiResponse<GameInstance.GameFindStatus, object?> resp;
 
             if (!task.IsCompleted)
             {
@@ -113,7 +134,7 @@ namespace BeamNG.RemoteControlUltra.Managers
                     SceneManager.LoadScene(0, LoadSceneMode.Single);
                 });
             }
-            else if ((resp = task.Result) is ErrorApiResponse<GameFindStatus, object?> error)
+            else if ((resp = task.Result) is ErrorApiResponse<GameInstance.GameFindStatus, object?> error)
             {
                 GameInstance = null;
                 UIManager.Ins.OpenPopup("Error", error.ErrorMsg, UIManager.PopupButtons.Ok, callback: result =>

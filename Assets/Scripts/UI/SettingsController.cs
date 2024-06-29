@@ -43,11 +43,7 @@ namespace BeamNG.RemoteControlUltra.UI
 
         private void Update()
         {
-#if PLATFORM_ANDROID
-            if (Input.GetKey(KeyCode.Escape))
-#else
-            if (Input.GetKeyUp(KeyCode.Escape))
-#endif
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
                 SceneManager.LoadScene(0, LoadSceneMode.Single);
             }

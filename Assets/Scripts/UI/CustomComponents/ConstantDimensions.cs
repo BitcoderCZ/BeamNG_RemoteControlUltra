@@ -26,28 +26,35 @@ namespace BeamNG.RemoteControlUltra.UI.CustomComponents
 
         private void Update()
         {
+            WidthOrHeight basedOn = BasedOn;
+
+            if (basedOn == WidthOrHeight.Smaller)
+                basedOn = rectTransform.rect.width < rectTransform.rect.height ? WidthOrHeight.Width : WidthOrHeight.Height;
+            else if (basedOn == WidthOrHeight.Larger)
+                basedOn = rectTransform.rect.width > rectTransform.rect.height ? WidthOrHeight.Width : WidthOrHeight.Height;
+
             if (StretchAndFit)
             {
                 float newWidth = rectTransform.rect.width, newHeight = rectTransform.rect.height;
 
-                if (BasedOn == WidthOrHeight.Width)
+                if (basedOn == WidthOrHeight.Width)
                 {
                     newWidth = parent.rect.width;
                     newHeight = newWidth * Ratio;
                     if (newHeight > parent.rect.height)
                     {
                         newHeight = parent.rect.height;
-                        newWidth = newHeight * Ratio;
+                        newWidth = newHeight / Ratio;
                     }
                 }
-                else if (BasedOn == WidthOrHeight.Height)
+                else if (basedOn == WidthOrHeight.Height)
                 {
                     newHeight = parent.rect.height;
                     newWidth = newHeight * Ratio;
                     if (newWidth > parent.rect.width)
                     {
                         newWidth = parent.rect.width;
-                        newHeight = newWidth * Ratio;
+                        newHeight = newWidth / Ratio;
                     }
                 }
 
@@ -56,9 +63,9 @@ namespace BeamNG.RemoteControlUltra.UI.CustomComponents
             }
             else
             {
-                if (BasedOn == WidthOrHeight.Width)
+                if (basedOn == WidthOrHeight.Width)
                     rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, rectTransform.rect.width * Ratio);
-                else if (BasedOn == WidthOrHeight.Height)
+                else if (basedOn == WidthOrHeight.Height)
                     rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, rectTransform.rect.height * Ratio);
             }
         }
@@ -67,6 +74,8 @@ namespace BeamNG.RemoteControlUltra.UI.CustomComponents
         {
             Width,
             Height,
+            Smaller,
+            Larger
         }
     }
 }

@@ -26,13 +26,8 @@ namespace BeamNG.RemoteControlUltra.UI
         protected virtual void Update()
         {
             // on android the back button triggers escape
-#if PLATFORM_ANDROID
-            if (CloseWhenEscape && Input.GetKey(KeyCode.Escape) && (WorksNotOnTop || IsOnTop))
+            if (CloseWhenEscape && Input.GetKeyDown(KeyCode.Escape) && (WorksNotOnTop || IsOnTop))
                 Close();
-#else
-            if (CloseWhenEscape && Input.GetKeyUp(KeyCode.Escape) && (WorksNotOnTop || IsOnTop))
-                Close();
-#endif
         }
 
         protected virtual void ExecIfOnTop(Action action)
@@ -46,6 +41,7 @@ namespace BeamNG.RemoteControlUltra.UI
         public virtual void Close()
         {
             UIManager.Ins.CloseUI(false);
+            //AppManager.Ins.RunNextFrame(() => UIManager.Ins.CloseUI(false));
         }
     }
 }

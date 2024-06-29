@@ -11,7 +11,7 @@ namespace BeamNG.RemoteControlUltra.Utils
     public static class TransformUtils
     {
         /************************** Transform **************************/
-        public static IEnumerable<Transform> GetChildren(this Transform transform)
+        public static Transform[] GetChildren(this Transform transform)
         {
             Transform[] children = new Transform[transform.childCount];
 
