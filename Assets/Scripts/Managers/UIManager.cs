@@ -78,7 +78,7 @@ namespace BeamNG.RemoteControlUltra.Managers
             else return go;
         }
 
-        public void CloseUI(bool closeAll = true)
+        public void CloseUI(bool closeAll)
         {
             if (activeUI.Count < 1)
                 return;

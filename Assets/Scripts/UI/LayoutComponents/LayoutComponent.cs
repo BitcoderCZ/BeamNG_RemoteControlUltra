@@ -43,7 +43,8 @@ namespace BeamNG.RemoteControlUltra.UI.LayoutComponents
         private Corner? resizeCorner;
 
         protected RectTransform RT = null!;
-        protected bool CanBeEdited => UIManager.Ins.Count == 0;
+        protected bool EditMode => CustomLayoutManager.Ins != null;
+        protected bool CanBeEdited => UIManager.Ins.Count == 0 && EditMode;
 
         [SerializeField] private TextMeshProUGUI textMesh_name = null!;
         [SerializeField] private TextMeshProUGUI textMesh_slot = null!;

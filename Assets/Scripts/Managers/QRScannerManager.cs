@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using UnityEngine.Android;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using ZXing;
 
@@ -67,7 +68,7 @@ namespace BeamNG.RemoteControlUltra.Managers
                 {
                     UIManager.Ins.OpenPopup("Error", "Couldn't get camera permission", UIManager.PopupButtons.Ok, callback: result =>
                     {
-                        Application.Quit();
+                        SceneManager.LoadScene(0, LoadSceneMode.Single);
                     });
                 }
             }
@@ -80,13 +81,24 @@ namespace BeamNG.RemoteControlUltra.Managers
             {
                 UIManager.Ins.OpenPopup("Error", "Couldn't find a camera", UIManager.PopupButtons.Ok, callback: result =>
                 {
-                    Application.Quit();
+                    SceneManager.LoadScene(0, LoadSceneMode.Single);
                 });
                 return;
             }
 
             camTexture = new WebCamTexture(webCam.Value.name);
-            camTexture.Play();
+            try
+            {
+                camTexture.Play();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+                UIManager.Ins.OpenPopup("Error", "Failed to start camera", UIManager.PopupButtons.Ok, callback: result =>
+                {
+                    SceneManager.LoadScene(0, LoadSceneMode.Single);
+                });
+            }
 
             camImage.texture = camTexture;
             camRect = (RectTransform)camImage.transform;
@@ -97,6 +109,12 @@ namespace BeamNG.RemoteControlUltra.Managers
 
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.Escape) && UIManager.Ins.Count == 0)
+            {
+                SceneManager.LoadScene(0, LoadSceneMode.Single);
+                return;
+            }
+
             if (
                 !initialized ||
                 UIManager.Ins.Count != 0 ||
@@ -106,10 +124,9 @@ namespace BeamNG.RemoteControlUltra.Managers
 
             bool rotated = camTexture.videoRotationAngle == 90 || camTexture.videoRotationAngle == 270;
 
-            // make sure it isn't bigger that the screen
             float camAspect = (float)camTexture.height / (float)camTexture.width;
             camDimensions.Ratio = camAspect;
-            camDimensions.BasedOn = rotated ? ConstantDimensions.WidthOrHeight.Height : ConstantDimensions.WidthOrHeight.Width;
+            camDimensions.BasedOn = ConstantDimensions.WidthOrHeight.Width;
 
             camImage.transform.localEulerAngles = new Vector3(0f, 0f, -camTexture.videoRotationAngle);
             camImage.transform.localScale = new Vector3(camTexture.videoVerticallyMirrored ? -1f : 1f, 1f, 1f);

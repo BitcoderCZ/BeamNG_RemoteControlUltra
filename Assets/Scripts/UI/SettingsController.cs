@@ -40,9 +40,10 @@ namespace BeamNG.RemoteControlUltra.UI
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                SceneManager.LoadScene(0, LoadSceneMode.Single);
-            }
+                Back();
         }
+
+        public void Back()
+            => SceneManager.LoadScene(0, LoadSceneMode.Single);
     }
 }

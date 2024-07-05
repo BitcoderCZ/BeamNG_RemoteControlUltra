@@ -1,9 +1,12 @@
-﻿
-using BeamNG.RemoteControlLib;
+﻿using BeamNG.RemoteControlLib;
 using BeamNG.RemoteControlUltra.Utils;
 using System;
 using System.Collections.Generic;
+#if PLATFORM_ANDROID && !UNITY_EDITOR
+using System.Linq;
+#endif
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 #nullable enable
 namespace BeamNG.RemoteControlUltra.Managers
@@ -44,6 +47,19 @@ namespace BeamNG.RemoteControlUltra.Managers
 
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.Escape) && UIManager.Ins.Count == 0)
+            {
+                UIManager.Ins.OpenPopup("Confirm", "Disconnect and go to menu?", UIManager.PopupButtons.YesNo, callback: result =>
+                {
+                    if (result == UIManager.PopupResult.Yes)
+                    {
+                        AppManager.Ins.Disconnect();
+                        SceneManager.LoadScene(0, LoadSceneMode.Single);
+                    }
+                });
+                return;
+            }
+
 #if PLATFORM_ANDROID && !UNITY_EDITOR
             if (plugin != null)
             {
@@ -85,24 +101,37 @@ namespace BeamNG.RemoteControlUltra.Managers
             {
                 GameInstance game = AppManager.Ins.GameInstance;
 
-                game.Controls!.Axes[0] = MathF.Min(MathF.Max((angle * sensitivitySetting * orientationhandler) / 75, -0.5f), 0.5f) + 0.5f;
-                game.Controls.Buttons[0] = 0f;
-                game.Controls.Buttons[1] = 0f;
-
-                float midddle = Screen.width / 2f;
-
-                foreach (var touch in Input.touches)
+                if (Save.Ins.Settings.CustomLayout)
                 {
-                    if (touch.phase == TouchPhase.Canceled) continue;
+                    var layout = Save.Ins.Settings.CurrentLayout;
 
-                    if (touch.position.x > midddle)
-                        game.Controls.Buttons[1] = 1f;
-                    else
-                        game.Controls.Buttons[0] = 1f;
+                    if (layout.AccelometerAxis > -1)
+                        game.Controls!.Axes[layout.AccelometerAxis] = MathF.Min(MathF.Max((angle * sensitivitySetting * orientationhandler) / 75, -0.5f), 0.5f) + 0.5f;
+
+                    throttlePressesIndicator.SetActive(false);
+                    brakesPressesIndicator.SetActive(false);
                 }
+                else
+                {
+                    game.Controls!.Axes[0] = MathF.Min(MathF.Max((angle * sensitivitySetting * orientationhandler) / 75, -0.5f), 0.5f) + 0.5f;
+                    game.Controls.Buttons[0] = 0f;
+                    game.Controls.Buttons[1] = 0f;
 
-                throttlePressesIndicator.SetActive(game.Controls.Buttons[1] >= 0.5f);
-                brakesPressesIndicator.SetActive(game.Controls.Buttons[0] >= 0.5f);
+                    float midddle = Screen.width / 2f;
+
+                    foreach (var touch in Input.touches)
+                    {
+                        if (touch.phase == TouchPhase.Canceled) continue;
+
+                        if (touch.position.x > midddle)
+                            game.Controls.Buttons[1] = 1f;
+                        else
+                            game.Controls.Buttons[0] = 1f;
+                    }
+
+                    throttlePressesIndicator.SetActive(game.Controls.Buttons[1] >= 0.5f);
+                    brakesPressesIndicator.SetActive(game.Controls.Buttons[0] >= 0.5f);
+                }
             }
 
             float uiAngle = gravity * 7.9f * orientationhandler;

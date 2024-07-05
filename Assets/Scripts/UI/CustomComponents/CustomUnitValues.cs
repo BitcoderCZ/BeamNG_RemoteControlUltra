@@ -40,12 +40,16 @@ namespace BeamNG.RemoteControlUltra.UI.CustomComponents
 
         private void refreshCache()
         {
+            if (Values is null) return;
+
             for (int i = 0; i < Values.Count; i++)
                 Values[i].UpdateCache();
         }
 
         private void update()
         {
+            if (Values is null) return;
+
             for (int i = 0; i < Values.Count; i++)
             {
                 CustomValue cv = Values[i];
@@ -101,22 +105,22 @@ namespace BeamNG.RemoteControlUltra.UI.CustomComponents
                     return value * MathF.Max(Screen.width, Screen.height);
 
                 case Unit.ThisWidth:
-                    return value * ((RectTransform)transform).sizeDelta.x;
+                    return value * ((RectTransform)transform).rect.width;
                 case Unit.ThisHeight:
-                    return value * ((RectTransform)transform).sizeDelta.y;
+                    return value * ((RectTransform)transform).rect.height;
                 case Unit.ThisMin:
-                    return value * MathF.Min(((RectTransform)transform).sizeDelta.x, ((RectTransform)transform).sizeDelta.y);
+                    return value * MathF.Min(((RectTransform)transform).rect.width, ((RectTransform)transform).rect.height);
                 case Unit.ThisMax:
-                    return value * MathF.Max(((RectTransform)transform).sizeDelta.x, ((RectTransform)transform).sizeDelta.y);
+                    return value * MathF.Max(((RectTransform)transform).rect.width, ((RectTransform)transform).rect.height);
 
                 case Unit.ParentWidth:
-                    return value * ((RectTransform)transform.parent).sizeDelta.x;
+                    return value * ((RectTransform)transform.parent).rect.width;
                 case Unit.ParentHeight:
-                    return value * ((RectTransform)transform.parent).sizeDelta.y;
+                    return value * ((RectTransform)transform.parent).rect.height;
                 case Unit.ParentMin:
-                    return value * MathF.Min(((RectTransform)transform.parent).sizeDelta.x, ((RectTransform)transform.parent).sizeDelta.y);
+                    return value * MathF.Min(((RectTransform)transform.parent).rect.width, ((RectTransform)transform.parent).rect.height);
                 case Unit.ParentMax:
-                    return value * MathF.Max(((RectTransform)transform.parent).sizeDelta.x, ((RectTransform)transform.parent).sizeDelta.y);
+                    return value * MathF.Max(((RectTransform)transform.parent).rect.width, ((RectTransform)transform.parent).rect.height);
 
                 default:
                     return float.NaN;

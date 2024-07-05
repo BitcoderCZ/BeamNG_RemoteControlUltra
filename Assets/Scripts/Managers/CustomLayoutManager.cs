@@ -18,7 +18,18 @@ namespace BeamNG.RemoteControlUltra.Managers
 
         private AndroidJavaObject? plugin;
 
-        private int accelometerAxis = 0;
+        private int accelometerAxisSlot = 0;
+        public int AccelometerAxisSlot
+        {
+            get => accelometerAxisSlot;
+            set
+            {
+                if (value < -1 || value >= ControlsLayout.MaxSlotsPerControlType)
+                    throw new IndexOutOfRangeException(nameof(value));
+
+                accelometerAxisSlot = value;
+            }
+        }
 
         private List<ButtonComponent> buttons = new();
         private List<AxisComponent> axes = new();
@@ -35,7 +46,7 @@ namespace BeamNG.RemoteControlUltra.Managers
             Screen.orientation = ScreenOrientation.LandscapeLeft;
 #endif
 
-            loadLayout(Save.Ins.Settings.CurrentLayout);
+            Read();
         }
 
         private void Update()
@@ -69,6 +80,9 @@ namespace BeamNG.RemoteControlUltra.Managers
             Save.Write();
         }
 
+        public void Read()
+            => loadLayout(Save.Ins.Settings.CurrentLayout);
+
         public void AddElement()
         {
             UIManager.Ins.OpenUI("SelectLayoutComponent", res =>
@@ -97,6 +111,9 @@ namespace BeamNG.RemoteControlUltra.Managers
             });
         }
 
+        public void OpenMenu()
+            => UIManager.Ins.OpenUI("LayoutMenu");
+
         public void SwapSlots(LayoutObjectType type, int a, int b)
         {
             if (type == LayoutObjectType.Button)
@@ -119,10 +136,10 @@ namespace BeamNG.RemoteControlUltra.Managers
                 foreach (var item in bList)
                     item.Slot = a;
 
-                if (accelometerAxis == a)
-                    accelometerAxis = b;
-                else if (accelometerAxis == b)
-                    accelometerAxis = a;
+                if (accelometerAxisSlot == a)
+                    accelometerAxisSlot = b;
+                else if (accelometerAxisSlot == b)
+                    accelometerAxisSlot = a;
             }
         }
 
@@ -173,7 +190,7 @@ namespace BeamNG.RemoteControlUltra.Managers
 
             return new ControlsLayout()
             {
-                AccelometerAxis = accelometerAxis,
+                AccelometerAxis = accelometerAxisSlot,
                 Buttons = buttons.ToDictionary(btn => btn.Slot, btn => new ControlsLayout.Button(btn.TypeName, btn.Name, tciToO[Array.IndexOf(children, btn.transform)], btn.transform.position, ((RectTransform)btn.transform).sizeDelta)),
                 Axes = axes.ToDictionary(axis => axis.Slot, axis => new ControlsLayout.Axis(axis.TypeName, axis.Name, tciToO[Array.IndexOf(children, axis.transform)], axis.transform.position, ((RectTransform)axis.transform).sizeDelta)),
             };
@@ -184,12 +201,12 @@ namespace BeamNG.RemoteControlUltra.Managers
             var children = componentContainer.GetChildren();
 
             for (int i = 0; i < children.Length; i++)
-                Destroy(children[i]);
+                Destroy(children[i].gameObject);
 
             buttons.Clear();
             axes.Clear();
 
-            accelometerAxis = layout.AccelometerAxis;
+            accelometerAxisSlot = layout.AccelometerAxis;
 
             foreach (var item in layout.Buttons.OrderBy(item => item.Value.Order))
             {

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 7bf9938f16ea7ec45b32a8c5d179b4a0
+guid: 18867960b23e57149ba05e867539a0c1
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -157044179906929124
-    second: Reconnect_0
+      213: 5839820706974066888
+    second: cross_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Reconnect_0
+      name: cross_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 600
-        height: 600
+        x: 63
+        y: 63
+        width: 424
+        height: 424
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c1eda92862112ddf0800000000000000
-      internalID: -157044179906929124
+      spriteID: 8c8e8270ef53b0150800000000000000
+      internalID: 5839820706974066888
       vertices: []
       indices: 
       edges: []
@@ -172,7 +172,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Reconnect_0: -157044179906929124
+      cross_0: 5839820706974066888
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

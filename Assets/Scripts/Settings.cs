@@ -1,6 +1,6 @@
-﻿using BeamNG.RemoteControlUltra.Layouts;
+﻿using BeamNG.RemoteControlLib;
+using BeamNG.RemoteControlUltra.Layouts;
 using BeamNG.RemoteControlUltra.Models;
-using System.Collections.Generic;
 
 #nullable enable
 namespace BeamNG.RemoteControlUltra
@@ -13,6 +13,9 @@ namespace BeamNG.RemoteControlUltra
 
         public ControlsLayout CurrentLayout { get; set; } = ControlsLayout.Default;
 
-        public List<ControlsLayout> Layouts { get; set; } = new List<ControlsLayout>();
+        public ControlsLayout[] Layouts { get; set; } = { ControlsLayout.Default, ControlsLayout.Default, ControlsLayout.Default };
+
+        public RequestedControls GetControlsRequest()
+            => CustomLayout ? CurrentLayout.Request : RequestedControls.Default;
     }
 }

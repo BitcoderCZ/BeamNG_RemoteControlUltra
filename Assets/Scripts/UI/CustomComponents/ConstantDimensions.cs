@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 #nullable enable
 namespace BeamNG.RemoteControlUltra.UI.CustomComponents
@@ -23,10 +24,21 @@ namespace BeamNG.RemoteControlUltra.UI.CustomComponents
         {
             WidthOrHeight basedOn = BasedOn;
 
+            float rot = MathF.Abs(rectTransform.rotation.eulerAngles.z);
+            bool rotated = rot == 90f || rot == 270f;
+
             if (basedOn == WidthOrHeight.Smaller)
                 basedOn = rectTransform.rect.width < rectTransform.rect.height ? WidthOrHeight.Width : WidthOrHeight.Height;
             else if (basedOn == WidthOrHeight.Larger)
                 basedOn = rectTransform.rect.width > rectTransform.rect.height ? WidthOrHeight.Width : WidthOrHeight.Height;
+
+            if (rotated)
+            {
+                if (basedOn == WidthOrHeight.Width)
+                    basedOn = WidthOrHeight.Height;
+                else
+                    basedOn = WidthOrHeight.Width;
+            }
 
             if (StretchAndFit)
             {
@@ -53,8 +65,15 @@ namespace BeamNG.RemoteControlUltra.UI.CustomComponents
                     }
                 }
 
-                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, newWidth);
-                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, newHeight);
+                if (rotated)
+                {
+                    rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, newWidth);
+                    rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, newHeight);
+                } else
+                {
+                    rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, newWidth);
+                    rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, newHeight);
+                }
             }
             else
             {

@@ -1,11 +1,14 @@
 using BeamNG.RemoteControlLib;
+using BeamNG.RemoteControlUltra.Layouts;
 using BeamNG.RemoteControlUltra.Utils;
 using BeamNG.RemoteControlUltra.Utils.Converters;
+using JsonSubTypes;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -27,7 +30,15 @@ namespace BeamNG.RemoteControlUltra.Managers
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings()
             {
-                Converters = new List<JsonConverter>() { new Vector2Converter() },
+                Converters = new List<JsonConverter>()
+                {
+                    new Vector2Converter(),
+                    JsonSubtypesConverterBuilder
+                        .Of(typeof(ControlsLayout.LayoutObject), "Type")
+                        .RegisterSubtype(typeof(ControlsLayout.Button), LayoutObjectType.Button)
+                        .RegisterSubtype(typeof(ControlsLayout.Axis), LayoutObjectType.Axis)
+                        .Build(),
+                },
             };
 
             if (!Save.Ins.SeenLegalNotice)
@@ -67,7 +78,7 @@ namespace BeamNG.RemoteControlUltra.Managers
             yield return null;
             UIManager.Ins.OpenUI("Text", value: "Connecting...");
 
-            var task = GameInstance.Find(securityCode, SystemInfo.deviceModel, RequestedControls.Default);
+            var task = GameInstance.Find(securityCode, SystemInfo.deviceModel, Save.Ins.Settings.GetControlsRequest());
 
             DateTime timeOut = DateTime.UtcNow.AddSeconds(30.0);
             while (!task.IsCompleted && DateTime.UtcNow < timeOut)
@@ -93,7 +104,6 @@ namespace BeamNG.RemoteControlUltra.Managers
             }
 
             GameInstance = ((OkApiResponse<GameInstance.GameFindStatus, GameInstance>)res).Result;
-            GameInstance.Controls.Axes[0] = 0.5f;
             GameInstance.Start();
 
             yield return null;
@@ -114,7 +124,7 @@ namespace BeamNG.RemoteControlUltra.Managers
             yield return null;
             UIManager.Ins.OpenUI("Text", value: "Connecting...");
 
-            var task = GameInstance.SendConnectRequest(SystemInfo.deviceModel, RequestedControls.Default);
+            var task = GameInstance.SendConnectRequest(SystemInfo.deviceModel, Save.Ins.Settings.GetControlsRequest());
 
             DateTime timeOut = DateTime.UtcNow.AddSeconds(30.0);
             while (!task.IsCompleted && DateTime.UtcNow < timeOut)
@@ -147,6 +157,12 @@ namespace BeamNG.RemoteControlUltra.Managers
                     SceneManager.LoadScene("Controller", LoadSceneMode.Single);
                 });
             }
+        }
+
+        public void Disconnect()
+        {
+            GameInstance?.Dispose();
+            GameInstance = null;
         }
 
         public void RunOnMainThread(Action action)
