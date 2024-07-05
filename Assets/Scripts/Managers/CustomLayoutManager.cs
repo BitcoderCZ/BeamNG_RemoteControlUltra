@@ -3,6 +3,7 @@ using BeamNG.RemoteControlUltra.UI.LayoutComponents;
 using BeamNG.RemoteControlUltra.Utils;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -107,8 +108,20 @@ namespace BeamNG.RemoteControlUltra.Managers
                 else if (component is AxisComponent axis)
                     axes.Add(axis);
                 else
-                    throw new InvalidDataException($"Invalid axis: '{component.GetType().Name}'");
+                    throw new InvalidDataException($"Invalid component: '{component.GetType().Name}'");
             });
+        }
+
+        public void RemoveElement(LayoutComponent component)
+        {
+            if (component is ButtonComponent button)
+                buttons.Remove(button);
+            else if (component is AxisComponent axis)
+                axes.Remove(axis);
+            else
+                throw new InvalidDataException($"Invalid component: '{component.GetType().Name}'");
+
+            Destroy(component.gameObject);
         }
 
         public void OpenMenu()

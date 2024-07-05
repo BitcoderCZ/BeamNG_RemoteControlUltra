@@ -26,6 +26,13 @@ namespace BeamNG.RemoteControlUltra.UI.Scenes
             dropdown_slot.value = btn.Slot;
         }
 
+        public void Delete()
+        {
+            CustomLayoutManager.Ins.RemoveElement((ButtonComponent)Value!);
+
+            Close();
+        }
+
         public override void Close()
         {
             if (Value is not ButtonComponent btn) throw new InvalidDataException("Value must be ButtonComponent");
