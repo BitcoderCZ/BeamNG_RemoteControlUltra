@@ -229,8 +229,6 @@ namespace BeamNG.RemoteControlUltra.Managers
 
                 axes.Add(axis);
             }
-
-            Debug.LogWarning("Loading axes not implemented");
         }
     }
 }

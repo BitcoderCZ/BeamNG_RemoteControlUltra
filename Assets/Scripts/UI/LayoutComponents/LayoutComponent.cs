@@ -18,7 +18,7 @@ namespace BeamNG.RemoteControlUltra.UI.LayoutComponents
         public abstract string TypeName { get; }
         public abstract Vector2 MinSize { get; }
 
-        //public float Value { get; protected set; }
+        public float Value { get; protected set; }
 
         public string Name
         {
@@ -49,6 +49,7 @@ namespace BeamNG.RemoteControlUltra.UI.LayoutComponents
         [SerializeField] private TextMeshProUGUI textMesh_name = null!;
         [SerializeField] private TextMeshProUGUI textMesh_slot = null!;
         [SerializeField] private List<ButtonPlus> cornerResizeButtons = null!;
+        [SerializeField] private List<GameObject> removeWhenNotEditing = null!;
 
         private void Start()
         {
@@ -70,12 +71,22 @@ namespace BeamNG.RemoteControlUltra.UI.LayoutComponents
                 };
             }
 
-            InputP.OnTouchUp += onInputUp;
+            if (!EditMode && removeWhenNotEditing is not null)
+                for (int i = 0; i < removeWhenNotEditing.Count; i++)
+                    Destroy(removeWhenNotEditing[i]);
+
+            InputP.OnTouchUp += OnInputUp;
         }
 
         private void Update()
         {
-            if (!CanBeEdited) return;
+            if (!CanBeEdited)
+            {
+                if (!EditMode)
+                    UpdateValue();
+
+                return;
+            }
 
             InputP.Update();
 
@@ -90,9 +101,11 @@ namespace BeamNG.RemoteControlUltra.UI.LayoutComponents
             }
         }
 
+        protected abstract void UpdateValue();
+
         public abstract void Edit();
 
-        public void OnPointerDown(PointerEventData eventData)
+        public virtual void OnPointerDown(PointerEventData eventData)
         {
             if (!CanBeEdited) return;
 
@@ -145,14 +158,15 @@ namespace BeamNG.RemoteControlUltra.UI.LayoutComponents
             }
 
             transformAction = TransformAction.None;
+            transformInput = -1;
         }
 
         private void OnDestroy()
         {
-            InputP.OnTouchUp -= onInputUp;
+            InputP.OnTouchUp -= OnInputUp;
         }
 
-        private void onInputUp(TouchP touch)
+        protected virtual void OnInputUp(TouchP touch)
         {
             if (touch.Id != transformInput) return;
 

@@ -1,7 +1,11 @@
 ﻿using BeamNG.RemoteControlLib;
+using BeamNG.RemoteControlUltra.Layouts;
+using BeamNG.RemoteControlUltra.UI.LayoutComponents;
 using BeamNG.RemoteControlUltra.Utils;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+
 #if PLATFORM_ANDROID && !UNITY_EDITOR
 using System.Linq;
 #endif
@@ -28,6 +32,11 @@ namespace BeamNG.RemoteControlUltra.Managers
 
         private float sensitivitySetting = 0.65f;
 
+        private List<ButtonComponent> buttons = new();
+        private List<AxisComponent> axes = new();
+
+        [SerializeField] private RectTransform componentContainer = null!;
+
         [SerializeField] private Transform uiContainer = null!;
         [SerializeField] private GameObject throttlePressesIndicator = null!;
         [SerializeField] private GameObject brakesPressesIndicator = null!;
@@ -43,6 +52,9 @@ namespace BeamNG.RemoteControlUltra.Managers
             Screen.orientation = ScreenOrientation.LandscapeLeft;
             orientationhandler = 1;
 #endif
+
+            if (Save.Ins.Settings.CustomLayout)
+                loadLayout(Save.Ins.Settings.CurrentLayout);
         }
 
         private void Update()
@@ -108,6 +120,18 @@ namespace BeamNG.RemoteControlUltra.Managers
                     if (layout.AccelometerAxis > -1)
                         game.Controls!.Axes[layout.AccelometerAxis] = MathF.Min(MathF.Max((angle * sensitivitySetting * orientationhandler) / 75, -0.5f), 0.5f) + 0.5f;
 
+                    for (int i = 0; i < buttons.Count; i++)
+                    {
+                        var button = buttons[i];
+                        game.Controls!.Buttons[button.Slot] = button.Value;
+                    }
+
+                    for (int i = 0; i < axes.Count; i++)
+                    {
+                        var axe = axes[i];
+                        game.Controls!.Axes[axe.Slot] = axe.Value;
+                    }
+
                     throttlePressesIndicator.SetActive(false);
                     brakesPressesIndicator.SetActive(false);
                 }
@@ -150,6 +174,39 @@ namespace BeamNG.RemoteControlUltra.Managers
 
             list.Add(newMember);
             return list;
+        }
+
+        private void loadLayout(ControlsLayout layout)
+        {
+            var children = componentContainer.GetChildren();
+
+            for (int i = 0; i < children.Length; i++)
+                Destroy(children[i].gameObject);
+
+            buttons.Clear();
+            axes.Clear();
+
+            foreach (var item in layout.Buttons.OrderBy(item => item.Value.Order))
+            {
+                ButtonComponent button = Instantiate(Prefabs.ButtonControls.FirstOrDefault(prefab => prefab.name == item.Value.TypeName), item.Value.Pos.XYN(), Quaternion.identity, componentContainer).GetComponent<ButtonComponent>();
+
+                ((RectTransform)button.transform).sizeDelta = item.Value.Size;
+
+                button.Load(item.Key, item.Value);
+
+                buttons.Add(button);
+            }
+
+            foreach (var item in layout.Axes.OrderBy(item => item.Value.Order))
+            {
+                AxisComponent axis = Instantiate(Prefabs.AxisControls.FirstOrDefault(prefab => prefab.name == item.Value.TypeName), item.Value.Pos.XYN(), Quaternion.identity, componentContainer).GetComponent<AxisComponent>();
+
+                ((RectTransform)axis.transform).sizeDelta = item.Value.Size;
+
+                axis.Load(item.Key, item.Value);
+
+                axes.Add(axis);
+            }
         }
 
         void OnDestroy()

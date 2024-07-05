@@ -69,7 +69,8 @@ namespace BeamNG.RemoteControlUltra.UI.CustomComponents
                 {
                     rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, newWidth);
                     rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, newHeight);
-                } else
+                }
+                else
                 {
                     rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, newWidth);
                     rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, newHeight);

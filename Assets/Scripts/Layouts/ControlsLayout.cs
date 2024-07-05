@@ -1,5 +1,4 @@
 ﻿using BeamNG.RemoteControlLib;
-using JsonSubTypes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
