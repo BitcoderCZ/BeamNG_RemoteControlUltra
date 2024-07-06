@@ -64,7 +64,10 @@ MonoBehaviour:
   - {fileID: 4955105792089726667, guid: dde97cf6fb49e7749a959b89adcf3d3c, type: 3}
   - {fileID: 4478459724449910215, guid: aefea4e50422d0640b92c698d54f989f, type: 3}
   - {fileID: 4953192156500518686, guid: 10bb5f273d6922b4ab4acd9ded6146fd, type: 3}
+  - {fileID: 5070569626362687726, guid: 3570400f88dc06041b445550c3588ef3, type: 3}
   button: {fileID: 2538238855760250166, guid: 0015ac81372f8c14fae8acfcd85e13a3, type: 3}
   buttonControls:
   - {fileID: 5543651471070409575, guid: 60e647ec4f2cc7946b52e8fb47e5428d, type: 3}
-  axisControls: []
+  axisControls:
+  - {fileID: 1157685320156768451, guid: 07e0e72221bfd4146b8b2f14b4b0416d, type: 3}
+  - {fileID: 1157685320156768451, guid: 2fcfa860ea50ffe488ac84732ac4c2f0, type: 3}

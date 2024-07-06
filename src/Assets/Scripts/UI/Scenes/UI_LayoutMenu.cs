@@ -3,6 +3,7 @@ using BeamNG.RemoteControlUltra.Managers;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -26,13 +27,13 @@ namespace BeamNG.RemoteControlUltra.UI.Scenes
             dropdown_accelometerAxis.value = CustomLayoutManager.Ins.AccelometerAxisSlot + 1;
             dropdown_accelometerAxis.onValueChanged.AddListener(newValue =>
             {
-                CustomLayoutManager.Ins.AccelometerAxisSlot = newValue - 1;
+                CustomLayoutManager.Ins.SwapSlots(LayoutObjectType.Axis, CustomLayoutManager.Ins.AccelometerAxisSlot, newValue - 1);
             });
         }
 
         public void Exit()
         {
-            CustomLayoutManager.Ins.AccelometerAxisSlot = dropdown_accelometerAxis.value - 1;
+            CustomLayoutManager.Ins.SwapSlots(LayoutObjectType.Axis, CustomLayoutManager.Ins.AccelometerAxisSlot, dropdown_accelometerAxis.value - 1);
 
             CustomLayoutManager.Ins.Write();
             SceneManager.LoadScene("Settings", LoadSceneMode.Single);
@@ -40,7 +41,7 @@ namespace BeamNG.RemoteControlUltra.UI.Scenes
 
         public override void Close()
         {
-            CustomLayoutManager.Ins.AccelometerAxisSlot = dropdown_accelometerAxis.value - 1;
+            CustomLayoutManager.Ins.SwapSlots(LayoutObjectType.Axis, CustomLayoutManager.Ins.AccelometerAxisSlot, dropdown_accelometerAxis.value - 1);
 
             base.Close();
         }

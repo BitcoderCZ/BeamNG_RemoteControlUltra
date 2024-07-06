@@ -1,5 +1,6 @@
 ﻿using BeamNG.RemoteControlUltra.Managers;
 using BeamNG.RemoteControlUltra.UI.LayoutComponents;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,10 +17,14 @@ namespace BeamNG.RemoteControlUltra.UI.Scenes
 
         public override void Init()
         {
-            foreach (var prefab in Prefabs.ButtonControls)
+            foreach (var prefab in Prefabs.ButtonControls
+                .OrderBy(prefab => prefab.GetComponent<LayoutComponent>().TypeName)
+            )
                 init(Instantiate(Prefabs.Button, buttonsContainer), prefab);
 
-            foreach (var prefab in Prefabs.AxisControls)
+            foreach (var prefab in Prefabs.AxisControls
+                .OrderBy(prefab => prefab.GetComponent<LayoutComponent>().TypeName)
+            )
                 init(Instantiate(Prefabs.Button, axesContainer), prefab);
 
             void init(GameObject go, GameObject prefab)

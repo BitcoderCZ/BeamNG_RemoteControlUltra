@@ -727,7 +727,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonsContainer: {fileID: 2278190333114702981}
-  axesContainer: {fileID: 0}
+  axesContainer: {fileID: 2557306292858082175}
 --- !u!222 &7493620924525478875
 CanvasRenderer:
   m_ObjectHideFlags: 0

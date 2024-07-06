@@ -128,8 +128,8 @@ namespace BeamNG.RemoteControlUltra.Managers
 
                     for (int i = 0; i < axes.Count; i++)
                     {
-                        var axe = axes[i];
-                        game.Controls!.Axes[axe.Slot] = axe.Value;
+                        var axis = axes[i];
+                        game.Controls!.Axes[axis.Slot] = axis.Invert ? (1f - axis.Value) : axis.Value;
                     }
 
                     throttlePressesIndicator.SetActive(false);

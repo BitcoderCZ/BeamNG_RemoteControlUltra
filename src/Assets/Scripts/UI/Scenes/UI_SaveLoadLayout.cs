@@ -2,7 +2,8 @@
 using BeamNG.RemoteControlUltra.UI;
 using System;
 
-namespace BeamNG.RemoteControlUltra.Assets.Scripts.UI.Scenes
+#nullable enable
+namespace BeamNG.RemoteControlUltra.UI.Scenes
 {
     public class UI_SaveLoadLayout : UIScene
     {

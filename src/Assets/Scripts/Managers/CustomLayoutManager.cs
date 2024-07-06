@@ -20,17 +20,7 @@ namespace BeamNG.RemoteControlUltra.Managers
         private AndroidJavaObject? plugin;
 
         private int accelometerAxisSlot = 0;
-        public int AccelometerAxisSlot
-        {
-            get => accelometerAxisSlot;
-            set
-            {
-                if (value < -1 || value >= ControlsLayout.MaxSlotsPerControlType)
-                    throw new IndexOutOfRangeException(nameof(value));
-
-                accelometerAxisSlot = value;
-            }
-        }
+        public int AccelometerAxisSlot => accelometerAxisSlot;
 
         private List<ButtonComponent> buttons = new();
         private List<AxisComponent> axes = new();
@@ -153,6 +143,22 @@ namespace BeamNG.RemoteControlUltra.Managers
                     accelometerAxisSlot = b;
                 else if (accelometerAxisSlot == b)
                     accelometerAxisSlot = a;
+
+                foreach (var item in axes.Where(btn => btn.Slot == -1).ToList())
+                {
+                    int slot;
+                    try
+                    {
+                        slot = nextFreeSlot(LayoutObjectType.Axis);
+                    }
+                    catch
+                    {
+                        RemoveElement(item);
+                        continue;
+                    }
+
+                    item.Slot = slot;
+                }
             }
         }
 
@@ -172,8 +178,8 @@ namespace BeamNG.RemoteControlUltra.Managers
             }
             else
             {
-                for (int slot = 1; slot < ControlsLayout.MaxSlotsPerControlType; slot++)
-                    if (axes.Where(btn => btn.Slot == slot).Count() == 0)
+                for (int slot = 0; slot < ControlsLayout.MaxSlotsPerControlType; slot++)
+                    if (slot != accelometerAxisSlot && axes.Where(btn => btn.Slot == slot).Count() == 0)
                         return slot;
             }
 
@@ -205,7 +211,13 @@ namespace BeamNG.RemoteControlUltra.Managers
             {
                 AccelometerAxis = accelometerAxisSlot,
                 Buttons = buttons.ToDictionary(btn => btn.Slot, btn => new ControlsLayout.Button(btn.TypeName, btn.Name, tciToO[Array.IndexOf(children, btn.transform)], btn.transform.position, ((RectTransform)btn.transform).sizeDelta)),
-                Axes = axes.ToDictionary(axis => axis.Slot, axis => new ControlsLayout.Axis(axis.TypeName, axis.Name, tciToO[Array.IndexOf(children, axis.transform)], axis.transform.position, ((RectTransform)axis.transform).sizeDelta)),
+                Axes = axes.ToDictionary(axis => axis.Slot, axis => new ControlsLayout.Axis(axis.TypeName, axis.Name, tciToO[Array.IndexOf(children, axis.transform)], axis.transform.position, ((RectTransform)axis.transform).sizeDelta)
+                {
+                    DefaultValue = axis.DefaultValue,
+                    Invert = axis.Invert,
+                    SnapToDefaultWhenNotInUse = axis.SnapToDefaultWhenNotInUse,
+                    SnapToDefaultSpeed = axis.SnapToDefaultSpeed,
+                }),
             };
         }
 

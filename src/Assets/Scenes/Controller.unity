@@ -127,6 +127,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4405919880657059027, guid: b61dd3052fa373f42881ff57972264bb, type: 3}
+      propertyPath: axisControls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4405919880657059027, guid: b61dd3052fa373f42881ff57972264bb, type: 3}
+      propertyPath: 'axisControls.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1157685320156768451, guid: 2fcfa860ea50ffe488ac84732ac4c2f0, type: 3}
     - target: {fileID: 6404050556606433320, guid: b61dd3052fa373f42881ff57972264bb, type: 3}
       propertyPath: m_Name
       value: Managers
@@ -285,13 +293,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Sample text
+  m_text: Gravity indicator
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -300,8 +308,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 3036676095
+  m_fontColor: {r: 1, g: 1, b: 1, a: 0.7058824}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

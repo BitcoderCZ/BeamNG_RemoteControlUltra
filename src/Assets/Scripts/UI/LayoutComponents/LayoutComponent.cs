@@ -76,9 +76,13 @@ namespace BeamNG.RemoteControlUltra.UI.LayoutComponents
                     Destroy(removeWhenNotEditing[i]);
 
             InputP.OnTouchUp += OnInputUp;
+
+            Init();
         }
 
-        private void Update()
+        protected virtual void Init() { }
+
+        protected virtual void Update()
         {
             if (!CanBeEdited)
             {
@@ -93,12 +97,19 @@ namespace BeamNG.RemoteControlUltra.UI.LayoutComponents
             if (transformAction == TransformAction.Resize && resizeCorner != null)
             {
                 Vector2 inputPos = InputP.GetTouchById(transformInput).Touch.position + grabOffset;
-                RT.sizeDelta = Vector2.Max((RT.anchoredPosition - inputPos) * resizeCorner.Value.NormalizationMultiplier(), MinSize);
+                Vector2 size = (RT.anchoredPosition - inputPos) * resizeCorner.Value.NormalizationMultiplier();
+                CheckSize(ref size);
+                RT.sizeDelta = size;
             }
             else if (transformAction == TransformAction.Move)
             {
                 RT.position = InputP.GetTouchById(transformInput).Touch.position + grabOffset;
             }
+        }
+
+        protected virtual void CheckSize(ref Vector2 size)
+        {
+            size = Vector2.Max(size, MinSize);
         }
 
         protected abstract void UpdateValue();

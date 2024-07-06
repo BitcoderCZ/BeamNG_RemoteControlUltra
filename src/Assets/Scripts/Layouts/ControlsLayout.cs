@@ -20,7 +20,7 @@ namespace BeamNG.RemoteControlUltra.Layouts
 
         public int AccelometerAxis { get; set; } = 0;
 
-        [JsonIgnore] public RequestedControls Request => new RequestedControls(HighestButtonSlot + 1, Math.Max(HighestAxisSlot, AccelometerAxis + 1));
+        [JsonIgnore] public RequestedControls Request => new RequestedControls(HighestButtonSlot + 1, Math.Max(HighestAxisSlot, AccelometerAxis) + 1);
         [JsonIgnore] public int HighestButtonSlot => Buttons.Max(item => (int?)item.Key) ?? -1;
         [JsonIgnore] public int HighestAxisSlot => Axes.Max(item => (int?)item.Key) ?? -1;
 
@@ -83,6 +83,7 @@ namespace BeamNG.RemoteControlUltra.Layouts
             public override LayoutObjectType Type => LayoutObjectType.Axis;
 
             public float DefaultValue { get; set; }
+            public bool Invert { get; set; }
             public bool SnapToDefaultWhenNotInUse { get; set; }
             public float SnapToDefaultSpeed { get; set; }
 
@@ -94,6 +95,7 @@ namespace BeamNG.RemoteControlUltra.Layouts
                 => new Axis(TypeName, Name, Order, Pos, Size)
                 {
                     DefaultValue = this.DefaultValue,
+                    Invert = this.Invert,
                     SnapToDefaultWhenNotInUse = this.SnapToDefaultWhenNotInUse,
                     SnapToDefaultSpeed = this.SnapToDefaultSpeed,
                 };
